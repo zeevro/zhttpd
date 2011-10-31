@@ -27,12 +27,12 @@ unsigned long HandleRequest(const char * szRequest, const char * szRequestHeader
 
 unsigned long WINAPI ThreadFunc(LPVOID lpParam)
 {
-	SOCKET * s = lpParam;
+	SOCKET * s = (SOCKET *)lpParam;
 	char szTemp[STR_LEN], szRequest[STR_LEN] = {0};
 	char szRequestHeader[STR_LEN] = {0}, szRequestBody[STR_LEN] = {0};
 	char * pcTemp = 0;
 	int ret = 0;
-	unsigned len = 0, nHeaderLength = 0, nContentLength = 0;
+	int len = 0, nHeaderLength = 0, nContentLength = 0;
 	
 	while (len = recv(*s, szTemp, STR_LEN, 0))
 	{
@@ -41,7 +41,7 @@ unsigned long WINAPI ThreadFunc(LPVOID lpParam)
 		if (szRequestHeader[0] == '\0')
 		{
 			/* Check if the header was completly received */
-			nHeaderLength = (unsigned)(strstr(szRequest, "\r\n\r\n") - szRequest);
+			nHeaderLength = (int)(strstr(szRequest, "\r\n\r\n") - szRequest);
 			if (nHeaderLength > 0)
 			{
 				nHeaderLength += 2;
